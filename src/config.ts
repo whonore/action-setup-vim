@@ -4,6 +4,7 @@ import { Os, getOs } from './utils';
 export interface Config {
     readonly version: string;
     readonly neovim: boolean;
+    readonly python: boolean;
     readonly os: Os;
     readonly token: string | null;
 }
@@ -50,11 +51,17 @@ function getNeovim(): boolean {
     return getBoolean('neovim', false);
 }
 
+function getPython(): boolean {
+    return getBoolean('python', false);
+}
+
 export function loadConfigFromInputs(): Config {
     const neovim = getNeovim();
+    const python = getPython();
     return {
         version: getVersion(neovim),
         neovim,
+        python,
         os: getOs(),
         token: getInput('token') ?? null,
     };
