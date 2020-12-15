@@ -18,6 +18,11 @@ inputs:
       Setting to true will install Neovim.
     required: false
     default: false
+  python:
+    description: >
+      Whether to install with `+python3`.
+    required: false
+    default: false
   token:
     description: >
       Personal access token for GitHub API. It is used for calling GitHub API when Neovim asset is

@@ -50,7 +50,7 @@ async function getXcode11DevDir(): Promise<string | null> {
 }
 
 // Only available on macOS or Linux. Passing null to `version` means install HEAD
-export async function buildVim(version: string, os: Os): Promise<Installed> {
+export async function buildVim(version: string, os: Os, python: boolean): Promise<Installed> {
     assert.notEqual(version, 'stable');
     const installDir = path.join(homedir(), 'vim');
     core.debug(`Building and installing Vim to ${installDir} (version=${version ?? 'HEAD'})`);
@@ -85,7 +85,11 @@ export async function buildVim(version: string, os: Os): Promise<Installed> {
     }
 
     const opts = { cwd: dir, env };
-    await exec('./configure', [`--prefix=${installDir}`, '--with-features=huge', '--enable-fail-if-missing'], opts);
+    const args = [`--prefix=${installDir}`, '--with-features=huge', '--enable-fail-if-missing'];
+    if (python) {
+        args.push("--enable-python3interp=yes");
+    }
+    await exec('./configure', args, opts);
     await exec('make', ['-j'], opts);
     await exec('make', ['install'], opts);
     core.debug(`Built and installed Vim to ${installDir} (version=${version})`);
